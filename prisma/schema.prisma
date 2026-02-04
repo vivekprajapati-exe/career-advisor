@@ -1,0 +1,163 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ==================== USER MODELS ====================
+
+model User {
+  id          String  @id @default(cuid())
+  clerkUserId String  @unique
+  email       String  @unique
+  name        String?
+  imageUrl    String?
+
+  // Profile Info
+  industry    String?
+  subIndustry String?
+  experience  Int? // Years of experience
+  currentRole String?
+  bio         String?  @db.Text
+  skills      String[]
+
+  // Preferences
+  targetRoles       String[]
+  targetIndustries  String[]
+  salaryExpectation Int?
+  remotePreference  String? // "remote", "hybrid", "onsite", "flexible"
+
+  // Status
+  onboardingCompleted Boolean @default(false)
+
+  // Relations
+  resumes           Resume[]
+  coverLetters      CoverLetter[]
+  interviewSessions InterviewSession[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==================== RESUME MODELS ====================
+
+model Resume {
+  id      String @id @default(cuid())
+  userId  String
+  title   String // "Software Engineer Resume"
+  content String @db.Text // Markdown content
+
+  // Sections (JSON for flexibility)
+  contactInfo Json? // { name, email, phone, linkedin, portfolio }
+  summary     String? @db.Text
+  experience  Json? // Array of work experiences
+  education   Json? // Array of education entries
+  skills      Json? // Categorized skills
+  projects    Json? // Array of projects
+
+  // Metadata
+  templateId String  @default("modern")
+  atsScore   Int? // 0-100 ATS compatibility score
+  pdfUrl     String? // Storage URL
+  isPrimary  Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==================== COVER LETTER MODELS ====================
+
+model CoverLetter {
+  id     String @id @default(cuid())
+  userId String
+
+  // Job Details
+  jobTitle       String
+  companyName    String
+  jobDescription String  @db.Text
+  jobUrl         String?
+
+  // Content
+  content String @db.Text // Full letter content
+  tone    String @default("professional") // professional, enthusiastic, formal
+
+  // Status
+  status String @default("draft") // draft, completed
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ==================== INTERVIEW MODELS ====================
+
+model InterviewSession {
+  id     String @id @default(cuid())
+  userId String
+
+  // Session Details
+  category      String // "technical", "behavioral", "mixed"
+  targetRole    String?
+  targetCompany String?
+  difficulty    String  @default("medium") // easy, medium, hard
+
+  // Results
+  totalQuestions Int
+  correctAnswers Int    @default(0)
+  score          Float? // Percentage score
+  questions      Json // Array of { question, userAnswer, correctAnswer, isCorrect, explanation }
+
+  // AI Feedback
+  improvementTips String?  @db.Text
+  strengths       String[]
+  weaknesses      String[]
+
+  // Status
+  status String @default("in_progress") // in_progress, completed
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+}
+
+// ==================== INDUSTRY INSIGHTS MODELS ====================
+
+model IndustryInsight {
+  id       String @id @default(cuid())
+  industry String @unique
+
+  // Market Data
+  salaryRanges Json // { entry: { min, max }, mid: { min, max }, senior: { min, max } }
+  growthRate   Float // Percentage
+  demandLevel  String // "High", "Medium", "Low"
+
+  // Skills & Trends
+  topSkills      String[]
+  emergingSkills String[]
+  keyTrends      String[]
+
+  // Outlook
+  marketOutlook  String // "Positive", "Neutral", "Negative"
+  outlookSummary String? @db.Text
+
+  // Top Companies
+  topCompanies String[]
+
+  // Update Tracking
+  lastUpdated DateTime @default(now())
+  nextUpdate  DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
