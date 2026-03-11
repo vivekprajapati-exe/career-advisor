@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Core Colors */
+    --color-background: #FAFAFA; /* warm off-white */
+    --color-foreground: #111827; /* near-black */
+    --color-border: #E5E7EB; /* neutral gray */
+    --color-input: #FFFFFF; /* pure white */
+    --color-ring: #1E40AF; /* deep laboratory blue */
+    
+    /* Card Colors */
+    --color-card: #FFFFFF; /* pure white */
+    --color-card-foreground: #111827; /* near-black */
+    
+    /* Popover Colors */
+    --color-popover: #FFFFFF; /* pure white */
+    --color-popover-foreground: #111827; /* near-black */
+    
+    /* Muted Colors */
+    --color-muted: #F9FAFB; /* light gray */
+    --color-muted-foreground: #6B7280; /* medium gray */
+    
+    /* Primary Colors */
+    --color-primary: #1E40AF; /* deep laboratory blue */
+    --color-primary-foreground: #FFFFFF; /* white */
+    
+    /* Secondary Colors */
+    --color-secondary: #0F766E; /* teal */
+    --color-secondary-foreground: #FFFFFF; /* white */
+    
+    /* Destructive Colors */
+    --color-destructive: #DC2626; /* vibrant red */
+    --color-destructive-foreground: #FFFFFF; /* white */
+    
+    /* Accent Colors */
+    --color-accent: #DC2626; /* vibrant red */
+    --color-accent-foreground: #FFFFFF; /* white */
+    
+    /* Success Colors */
+    --color-success: #059669; /* forest green */
+    --color-success-foreground: #FFFFFF; /* white */
+    
+    /* Warning Colors */
+    --color-warning: #D97706; /* amber */
+    --color-warning-foreground: #FFFFFF; /* white */
+    
+    /* Error Colors */
+    --color-error: #DC2626; /* vibrant red */
+    --color-error-foreground: #FFFFFF; /* white */
+  }
+
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  .shadow-element-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .shadow-lab-equipment {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .transition-ui {
+    transition: all 200ms ease-out;
+  }
+  
+  .transition-educational {
+    transition: all 800ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .font-data {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
